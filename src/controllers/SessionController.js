@@ -24,7 +24,7 @@ class SessionController {
             }
 
             const validPassword = await checkPassword(user, password)
-
+            
             if(!validPassword) {
                 return res.status(401).json({ msg: 'Usuário ou senha inválido'})
             }

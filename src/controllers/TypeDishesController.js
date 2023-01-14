@@ -64,9 +64,23 @@ class TypeDishesController {
         }
     }
 
-    async deletTypeDish(req, res) {
+    async deleteTypeDish(req, res) {
         try {
+            const { id, restaurantId } = req.params;
 
+            if(!id, !restaurantId) {
+                return res.status(404).json({ msg: 'Campo não preenchido.' });
+            }
+
+            const typeDish = await TypeDishes.findOne({ _id: id, restaurantId })
+
+            if(!typeDish) {
+                return res.status(404).json({ msg: 'Tipo de prato não encontrado.' });
+            }
+
+            await typeDish.deleteOne()
+
+            return res.status(200).json({ msg: 'Tipo de prato excluido.'})
         } catch (err) {
             return res.status(500).json({ msg: '.', error: true })
         }

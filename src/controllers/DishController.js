@@ -61,15 +61,15 @@ class DishController {
                 return res.status(404).json({ msg: 'Campo não preenchido.' });
             }
 
-            const updateDish = Dish.findOne({ id, typeDishesId})
+            const updateDish = Dish.findOne({ _id: id, typeDishesId})
 
             if(!updateDish){
                 return res.status(404).json({ msg: 'Prato não encontrado.' });
             }
 
-            const dish = await Dish.findOne({ typeDishesId, name })
+            const isDish = await Dish.findOne({ typeDishesId, name })
 
-            if(dish && dish.name !== name) {
+            if(isDish && isDish._id != id) { 
                 return res.status(404).json({ msg: 'Já existe um prato com esse nome.' });
             }
 
@@ -88,7 +88,21 @@ class DishController {
 
     async deleteDish(req, res) {
         try {
+            const { id, typeDishesId} = req.params;
 
+            if(!id, !typeDishesId) {
+                return res.status(404).json({ msg: 'Campo não preenchido.' });
+            }
+
+            const dish = await Dish.findOne({ typeDishesId, _id: id })
+
+            if(!dish) {
+                return res.status(404).json({ msg: 'Prato não encontrado.' });
+            }
+
+            await dish.deleteOne();
+            
+            return res.status(200).json({ msg: 'Prato excluido com sucesso.' })
         } catch (err) {
             return res.status(500).json({ msg: '.', error: true })
         }

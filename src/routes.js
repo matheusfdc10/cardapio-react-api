@@ -27,13 +27,15 @@ routes.get('/getRestaurant', RestaurantController.readRestaurant);
 
 
 routes.post('/createTypeDishes', TypeDishesController.createTypeDish);
-routes.put('/updateTypeDish/:restaurantId', TypeDishesController.updateTypeDish)
+routes.put('/updateTypeDish/:restaurantId', TypeDishesController.updateTypeDish);
+routes.delete('/deleteTypeDish/:id/:restaurantId', TypeDishesController.deleteTypeDish);
 
 
 routes.post('/createDish/:typeDishesId', DishController.createDish);
 routes.get('/readDish/:id', DishController.readDish);
 routes.get('/readDishes/:typeDishesId', DishController.readDishes);
 routes.put('/updateDish/:id/:typeDishesId', DishController.updateDish);
+routes.delete('/deleteDish/:id/:typeDishesId', DishController.deleteDish);
 
 
 // // -----controler publicos-----
