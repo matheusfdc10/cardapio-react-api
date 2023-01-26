@@ -6,9 +6,15 @@ class DishController {
         try {
             // const userId = req.userId;
             const { typeDishesId } = req.params;
-            const file = req?.file;
             const { name, description, price} = req.body;
 
+            const image = req?.file;
+            const base64 = image?.buffer.toString('base64');
+            var file = ''
+            if(base64){
+                file = `data:${image.mimetype};base64,${base64}`
+            }
+            
             if (!name, !description, !price) {
                 return res.status(404).json({ msg: 'Campo não preenchido.' });
             }
@@ -24,7 +30,7 @@ class DishController {
                 name,
                 description,
                 price,
-                image: file?.path? (file.destination + file.filename) : null,
+                image: file || null,
                 status: 'ativo'
             })
 
@@ -58,8 +64,14 @@ class DishController {
     async updateDish(req, res) {
         try {
             const { id, typeDishesId} = req.params;
-            const file = req?.file;
             const { name, price, description, status} = req.body;
+
+            const image = req?.file;
+            const base64 = image?.buffer.toString('base64');
+            var file = null
+            if(base64){
+                file = `data:${image.mimetype};base64,${base64}`
+            }
 
             if(!id, !typeDishesId, !name, !price, !description, !status) {
                 return res.status(404).json({ msg: 'Campo não preenchido.' });
@@ -77,16 +89,16 @@ class DishController {
                 return res.status(404).json({ msg: 'Já existe um prato com esse nome.' });
             }
 
-            if(file){
-                fs.unlinkSync(updateDish.image.replace("/", "\\"))
-            }
+            // if(file){
+            //     fs.unlinkSync(updateDish.image.replace("/", "\\"))
+            // }
 
             await updateDish.updateOne({
                 name,
                 price,
                 description,
                 status,
-                image: file ? (file.destination + file.filename) : updateDish.image
+                image: file || updateDish.image
             })
 
             return res.status(200).json({ msg: 'Prato atualizado com sucesso.' });
@@ -109,9 +121,9 @@ class DishController {
                 return res.status(404).json({ msg: 'Prato não encontrado.' });
             }
             
-            if(dish.image){
-                fs.unlinkSync(dish.image.replace("/", "\\"))
-            }
+            // if(dish.image){
+            //     fs.unlinkSync(dish.image.replace("/", "\\"))
+            // }
 
             await dish.deleteOne();
             
